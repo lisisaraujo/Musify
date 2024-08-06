@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.syntax_institut.jpc.R
-import de.syntax_institut.jpc.models.Song
+import de.syntax_institut.jpc.data.models.Song
 
 @Composable
 fun ImageButton(
@@ -50,7 +50,7 @@ fun SongDetailCardView(song: Song) {
             modifier = Modifier.padding(16.dp)
         ) {
             Image(
-                painter = painterResource(id = song.imageUrl),
+                painter = painterResource(id = song.albumCover),
                 contentDescription = "Album Cover",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -67,6 +67,8 @@ fun SongDetailCardView(song: Song) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
+
+                        
                         text = song.title,
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Left

@@ -8,7 +8,12 @@ import androidx.compose.ui.unit.dp
 import de.syntax_institut.jpc.R
 
 @Composable
-fun PlaybackControls() {
+fun PlaybackControls(
+    onPreviousClick: () -> Unit,
+    onPlayClick: () -> Unit,
+    onNextClick: () -> Unit,
+    isPlaying: Boolean
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -19,31 +24,32 @@ fun PlaybackControls() {
             imageResId = R.drawable.shuffle_24dp_e8eaed_fill0_wght400_grad0_opsz24,
             contentDescription = "Shuffle",
             onClick = { /* TODO */ },
-            tint = MaterialTheme.colorScheme.onSurface // Use theme color
+            tint = MaterialTheme.colorScheme.onSurface
         )
         ImageButton(
             imageResId = R.drawable.skip_previous_24dp_e8eaed_fill0_wght400_grad0_opsz24,
             contentDescription = "Previous",
-            onClick = { /* TODO */ },
-            tint = MaterialTheme.colorScheme.onSurface // Use theme color
+            onClick = onPreviousClick,
+            tint = MaterialTheme.colorScheme.onSurface
         )
         ImageButton(
-            imageResId = R.drawable.play_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24,
-            contentDescription = "Play",
-            onClick = { /* TODO */ },
-            tint = MaterialTheme.colorScheme.onSurface // Use theme color
+            imageResId = if (isPlaying) R.drawable.baseline_pause_circle_outline_24
+            else R.drawable.play_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24,
+            contentDescription = if (isPlaying) "Pause" else "Play",
+            onClick = onPlayClick,
+            tint = MaterialTheme.colorScheme.onSurface
         )
         ImageButton(
             imageResId = R.drawable.skip_next_24dp_e8eaed_fill0_wght400_grad0_opsz24,
             contentDescription = "Next",
-            onClick = { /* TODO */ },
-            tint = MaterialTheme.colorScheme.onSurface // Use theme color
+            onClick = onNextClick,
+            tint = MaterialTheme.colorScheme.onSurface
         )
         ImageButton(
             imageResId = R.drawable.repeat_one_24dp_e8eaed_fill0_wght400_grad0_opsz24,
             contentDescription = "Repeat",
             onClick = { /* TODO */ },
-            tint = MaterialTheme.colorScheme.onSurface // Use theme color
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }
