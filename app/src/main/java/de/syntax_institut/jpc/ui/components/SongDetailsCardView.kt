@@ -37,7 +37,7 @@ fun ImageButton(
 }
 
 @Composable
-fun SongDetailCardView(song: Song) {
+fun SongDetailCardView(song: Song, onAddToPlaylist: () -> Unit) {
     ElevatedCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
@@ -68,7 +68,7 @@ fun SongDetailCardView(song: Song) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
 
-                        
+
                         text = song.title,
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Left
@@ -83,7 +83,7 @@ fun SongDetailCardView(song: Song) {
                 ImageButton(
                     imageResId = R.drawable.baseline_check_circle_24,
                     contentDescription = "Play",
-                    onClick = { /* TODO */ }
+                    onClick = onAddToPlaylist
                 )
             }
         }
