@@ -1,5 +1,6 @@
 package de.syntax_institut.jpc
 
+import AlbumScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,7 +16,6 @@ import de.syntax_institut.jpc.ui.screens.PlayingSongScreen
 import de.syntax_institut.jpc.ui.theme.JPCTheme
 import kotlinx.serialization.Serializable
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,22 +29,25 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = PlayingSongScreen
+                        startDestination = PlayingSongScreenRoute
                     ) {
 
-
-                        composable<PlayingSongScreen> {
+                        composable<PlayingSongScreenRoute> {
                             PlayingSongScreen(
                                 onMenu = { TODO() },
-                                onClose = { TODO() },
-                                onAddToPlaylist = {navController.navigate(AddToPlaylistScreen)}
+                                onClose = { navController.navigate(AlbumScreenRoute) },
+                                onAddToPlaylist = { navController.navigate(AddToPlaylistScreenRoute) }
                             )
                         }
-                        composable<AddToPlaylistScreen> {
+                        composable<AddToPlaylistScreenRoute> {
                             AddToPlaylistScreen(
                                 onClose = { navController.navigateUp() },
                                 onNewPlaylist = { TODO() }
                             )
+                        }
+
+                        composable<AlbumScreenRoute> {
+                            AlbumScreen(onBackClick = { navController.navigateUp() }, onSongSelected = {navController.navigate(PlayingSongScreenRoute) })
                         }
                     }
                 }
@@ -53,10 +56,13 @@ class MainActivity : ComponentActivity() {
     }
 
     @Serializable
-    data object PlayingSongScreen
+    data object PlayingSongScreenRoute
 
     @Serializable
-    data object AddToPlaylistScreen
+    data object AddToPlaylistScreenRoute
+
+    @Serializable
+    data object AlbumScreenRoute
 
 }
 

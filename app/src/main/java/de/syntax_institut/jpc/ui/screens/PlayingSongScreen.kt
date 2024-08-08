@@ -29,6 +29,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun PlayingSongScreen(
+    modifier: Modifier = Modifier,
     onClose: () -> Unit,
     onMenu: () -> Unit,
     onAddToPlaylist: () -> Unit,
@@ -64,7 +65,7 @@ fun PlayingSongScreen(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column {

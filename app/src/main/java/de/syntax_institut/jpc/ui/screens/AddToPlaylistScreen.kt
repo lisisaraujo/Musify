@@ -25,12 +25,13 @@ import de.syntax_institut.jpc.ui.components.TopAppBar
 
 @Composable
 fun AddToPlaylistScreen(
+    modifier: Modifier = Modifier,
     onClose: () -> Unit,
     onNewPlaylist: () -> Unit,
     viewModel: PlaylistsViewModel = viewModel()
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column {
