@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax_institut.jpc.R
 import de.syntax_institut.jpc.data.models.Song
-import de.syntax_institut.jpc.ui.ViewModels.SongPlayViewModel
+import de.syntax_institut.jpc.ui.ViewModels.SongsViewModel
 import de.syntax_institut.jpc.ui.components.PlaybackControls
 import de.syntax_institut.jpc.ui.components.TopAppBar
 import kotlinx.coroutines.delay
@@ -33,34 +33,44 @@ fun PlayingSongScreen(
     onClose: () -> Unit,
     onMenu: () -> Unit,
     onAddToPlaylist: () -> Unit,
+    songID: Int
 ) {
+    val viewModel: SongsViewModel = viewModel()
     var allSongs by remember { mutableStateOf(emptyList<Song>()) }
-    var currentSongIndex by remember { mutableStateOf(0) }
     var currentPosition by remember { mutableStateOf(0) }
     var isPlaying by remember { mutableStateOf(false) }
 
-    val viewModel: SongPlayViewModel = viewModel()
+    var currentSong by remember { mutableStateOf<Song?>(null) }
+    var currentSongIndex by remember { mutableStateOf(-1) }
 
     LaunchedEffect(Unit) {
         allSongs = viewModel.loadSongs()
+        currentSongIndex = allSongs.indexOfFirst { it.id == songID }
+        currentSong = allSongs.getOrNull(currentSongIndex)
     }
 
-    val currentSong = allSongs.getOrNull(currentSongIndex) ?: Song(
+    LaunchedEffect(currentSongIndex) {
+        currentSong = allSongs.getOrNull(currentSongIndex)
+        currentPosition = 0 // Reset position when song changes
+    }
+
+    val songToDisplay = currentSong ?: Song(
         albumCover = R.drawable.care_4_u_album_cover,
         title = "No Song",
         artist = "Unknown",
         duration = 0
     )
 
-    LaunchedEffect(isPlaying, currentSong) {
-        while (isPlaying && currentPosition < currentSong.duration) {
-            delay(1000)
-            currentPosition =
-                viewModel.updatePosition(currentPosition, isPlaying, currentSong.duration)
-        }
-        if (currentPosition >= currentSong.duration) {
-            isPlaying = false
-            currentPosition = 0
+    LaunchedEffect(isPlaying, currentPosition) {
+        if (isPlaying) {
+            while (currentPosition < songToDisplay.duration) {
+                delay(1000)
+                currentPosition += 1
+            }
+            if (currentPosition >= songToDisplay.duration) {
+                isPlaying = false
+                currentPosition = 0
+            }
         }
     }
 
@@ -70,7 +80,7 @@ fun PlayingSongScreen(
     ) {
         Column {
             TopAppBar(
-                title = currentSong.artist,
+                title = songToDisplay.artist,
                 navigationIcon = Icons.Filled.KeyboardArrowDown,
                 navigationIconContentDescription = "",
                 actionIcon = Icons.Filled.MoreVert,
@@ -78,11 +88,11 @@ fun PlayingSongScreen(
                 onNavigationClick = onClose,
                 onActionClick = onMenu
             )
-            SongDetailCardView(currentSong, onAddToPlaylist = onAddToPlaylist)
+            SongDetailCardView(songToDisplay, onAddToPlaylist = onAddToPlaylist)
             Spacer(modifier = Modifier.height(16.dp))
             SongProgressBar(
                 currentPosition = currentPosition.toFloat(),
-                duration = currentSong.duration,
+                duration = songToDisplay.duration,
                 onPositionChange = { newPosition ->
                     currentPosition = newPosition.toInt()
                 }
@@ -103,3 +113,4 @@ fun PlayingSongScreen(
         }
     }
 }
+

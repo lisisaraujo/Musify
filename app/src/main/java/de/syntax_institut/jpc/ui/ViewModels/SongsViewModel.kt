@@ -4,14 +4,14 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import de.syntax_institut.jpc.data.Repository
 import de.syntax_institut.jpc.data.models.Song
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 val TAG = "SongPlayViewModel"
-class SongPlayViewModel(application: Application) : AndroidViewModel(application) {
+class SongsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = Repository(application)
 
-    suspend fun loadSongs(): List<Song> {
+//    private val _songs = MutableStateFlow<List<Song>>(emptyList())
+//    val songs: StateFlow<List<Song>> = _songs
+    suspend fun loadSongs(): List<Song>{
         return repository.getAllSongs()
     }
 
@@ -30,4 +30,5 @@ class SongPlayViewModel(application: Application) : AndroidViewModel(application
             currentPosition
         }
     }
+
 }
