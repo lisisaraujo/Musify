@@ -1,20 +1,18 @@
 package de.syntax_institut.jpc
 
 import AlbumScreen
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -24,21 +22,29 @@ import de.syntax_institut.jpc.ui.screens.PlayingSongScreen
 import de.syntax_institut.jpc.ui.theme.JPCTheme
 import kotlinx.serialization.Serializable
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+        // Enable edge-to-edge content
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             val navController = rememberNavController()
 
             JPCTheme(darkTheme = true) {
-                Scaffold(
-                    containerColor = MaterialTheme.colorScheme.background
-                ) { paddingValues ->
-                    paddingValues.calculateTopPadding()
+
+                val isDarkMode = isSystemInDarkTheme()
+                val statusBarColor = if (isDarkMode) Color.White else Color.Black
+                val navigationBarColor = if (isDarkMode) Color.White else Color.Black
+
+                // Set the system bar colors
+                SideEffect {
+                    window.statusBarColor = statusBarColor.toArgb()
+                    window.navigationBarColor = navigationBarColor.toArgb()
+                }
+
+                Scaffold { contentPadding ->
 
                     NavHost(
                         navController = navController,
@@ -47,6 +53,7 @@ class MainActivity : ComponentActivity() {
                         composable<PlayingSongScreenRoute> { backStackEntry ->
                             val route = backStackEntry.toRoute<PlayingSongScreenRoute>()
                             PlayingSongScreen(
+//                                modifier = Modifier.padding(contentPadding).fillMaxSize(),
                                 onMenu = { /* TODO */ },
                                 onClose = { navController.navigate(AlbumScreenRoute) },
                                 onAddToPlaylist = { navController.navigate(AddToPlaylistScreenRoute) },
@@ -55,12 +62,14 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<AddToPlaylistScreenRoute> {
                             AddToPlaylistScreen(
+//                                modifier = Modifier.padding(contentPadding).fillMaxSize(),
                                 onClose = { navController.navigateUp() },
                                 onNewPlaylist = { /* TODO */ }
                             )
                         }
                         composable<AlbumScreenRoute> {
                             AlbumScreen(
+                                modifier = Modifier.padding(contentPadding).fillMaxSize(),
                                 onBackClick = { navController.navigateUp() },
                                 onSongSelected = { song ->
                                     navController.navigate(PlayingSongScreenRoute(song.id))
@@ -82,13 +91,3 @@ class MainActivity : ComponentActivity() {
     @Serializable
     data object AlbumScreenRoute
 }
-
-
-
-
-
-
-
-
-
-

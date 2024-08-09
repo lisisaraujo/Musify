@@ -21,6 +21,7 @@ fun TopAppBar(
     onNavigationClick: () -> Unit,
     onActionClick: () -> Unit,
     modifier: Modifier = Modifier) {
+
     CenterAlignedTopAppBar(
         title = {
             Text(
